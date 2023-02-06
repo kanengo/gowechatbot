@@ -42,7 +42,9 @@ func main() {
 		fmt.Println(err)
 	} else {
 		for _, group := range groups {
-			fmt.Println("群组:", group.ID(), group.NickName, group.RemarkName)
+			if group.ID() == message.MNLittleRoom {
+				fmt.Println("群组:", group.ID(), group.NickName, group.RemarkName)
+			}
 		}
 	}
 
