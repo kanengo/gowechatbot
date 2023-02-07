@@ -1,8 +1,12 @@
 package message
 
 import (
-	"github.com/eatmoreapple/openwechat"
+	"fmt"
+	"gowechatbot/bot/job"
 	"log"
+	"strings"
+
+	"github.com/eatmoreapple/openwechat"
 )
 
 const (
@@ -11,21 +15,29 @@ const (
 
 func Handler(msg *openwechat.Message) {
 	if msg.IsComeFromGroup() { //群组
-		group, err := msg.Sender()
+		user, err := msg.Sender()
 		if err != nil {
 			log.Println("error:", err)
 			return
 		}
+		group := &openwechat.Group{
+			User: user,
+		}
 		switch group.ID() {
 		case MNLittleRoom:
+			if msg.IsAt() {
+				fmt.Println("[收到@消息]:", msg.Content)
+			}
+			if strings.Contains(msg.Content, "#testlove") {
+				job.SendLoveWord(group)
+			}
 		default:
 
 		}
 
 	} else {
-
+		if msg.IsText() && msg.Content == "ping" {
+			msg.ReplyText("pong")
+		}
 	}
-	//if msg.IsText() && msg.Content == "ping" {
-	msg.ReplyText("pong")
-	//}
 }

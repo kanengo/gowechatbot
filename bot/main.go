@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"gowechatbot/bot/job"
 	"gowechatbot/bot/message"
 
 	"github.com/eatmoreapple/openwechat"
+	"github.com/robfig/cron/v3"
 )
 
 func main() {
@@ -25,6 +27,8 @@ func main() {
 		return
 	}
 
+	c := cron.New()
+
 	// 获取登陆的用户
 	self, err := bot.GetCurrentUser()
 	if err != nil {
@@ -44,9 +48,14 @@ func main() {
 		for _, group := range groups {
 			if group.ID() == message.MNLittleRoom {
 				fmt.Println("群组:", group.ID(), group.NickName, group.RemarkName)
+				c.AddFunc("0 0 8 * * *", func() {
+					job.SendLoveWord(group)
+				})
 			}
 		}
 	}
+
+	c.Start()
 
 	// 阻塞主goroutine, 直到发生异常或者用户主动退出
 	bot.Block()
