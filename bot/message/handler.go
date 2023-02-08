@@ -2,9 +2,10 @@ package message
 
 import (
 	"fmt"
-	"gowechatbot/bot/job"
 	"log"
 	"strings"
+
+	"gowechatbot/bot/job"
 
 	"github.com/eatmoreapple/openwechat"
 )
@@ -29,7 +30,7 @@ func Handler(msg *openwechat.Message) {
 				fmt.Println("[收到@消息]:", msg.Content)
 			}
 			if strings.Contains(msg.Content, "#testlove") {
-				job.SendLoveWord(group)
+				job.SendLoveWordMorning(group)
 			}
 		default:
 

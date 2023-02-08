@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	"gowechatbot/bot/job"
 	"gowechatbot/bot/message"
 
@@ -37,8 +39,8 @@ func main() {
 	}
 
 	//获取所有的好友
-	friends, err := self.Friends()
-	fmt.Println(friends, err)
+	//friends, err := self.Friends()
+	//fmt.Println(friends, err)
 
 	// 获取所有的群组
 	groups, err := self.Groups()
@@ -46,11 +48,23 @@ func main() {
 		fmt.Println(err)
 	} else {
 		for _, group := range groups {
-			if group.ID() == message.MNLittleRoom {
+			if group.ID() == message.MNLittleRoom || group.NickName == "MN小房间" {
 				fmt.Println("群组:", group.ID(), group.NickName, group.RemarkName)
-				c.AddFunc("0 0 8 * * *", func() {
-					job.SendLoveWord(group)
+				_, err := c.AddFunc("0 8 * * *", func() {
+					job.SendLoveWordMorning(group)
 				})
+				if err != nil {
+					log.Fatalln(err)
+				}
+				_, err = c.AddFunc("55 21 * * * ", func() {
+					job.TakeMedicine(group)
+				})
+				if err != nil {
+					log.Fatalln(err)
+				}
+				for _, member := range group.MemberList {
+					fmt.Println(member.ID(), member.UserName, member.NickName)
+				}
 			}
 		}
 	}
@@ -58,5 +72,7 @@ func main() {
 	c.Start()
 
 	// 阻塞主goroutine, 直到发生异常或者用户主动退出
-	bot.Block()
+	if err := bot.Block(); err != nil {
+		log.Fatalln(err)
+	}
 }
