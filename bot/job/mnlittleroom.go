@@ -65,3 +65,11 @@ func TakeMedicine(group *openwechat.Group) {
 	_, _ = group.SendText(msg)
 
 }
+
+func DrinkWater(group *openwechat.Group) {
+
+	msg := fmt.Sprintf("喝水喝水！多喝水，健康又减胖~")
+
+	_, _ = group.SendText(msg)
+
+}

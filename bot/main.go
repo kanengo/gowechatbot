@@ -48,7 +48,7 @@ func main() {
 		fmt.Println(err)
 	} else {
 		for _, group := range groups {
-			if group.ID() == message.MNLittleRoom || group.NickName == "MN小房间" {
+			if group.NickName == message.MNLittleRoom {
 				fmt.Println("群组:", group.ID(), group.NickName, group.RemarkName)
 				_, err := c.AddFunc("0 8 * * *", func() {
 					job.SendLoveWordMorning(group)
@@ -57,6 +57,12 @@ func main() {
 					log.Fatalln(err)
 				}
 				_, err = c.AddFunc("55 21 * * * ", func() {
+					job.TakeMedicine(group)
+				})
+				if err != nil {
+					log.Fatalln(err)
+				}
+				_, err = c.AddFunc("0 */1 * * * ", func() {
 					job.TakeMedicine(group)
 				})
 				if err != nil {

@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	MNLittleRoom = "754116689"
+	MNLittleRoom = "MN小房间"
 )
 
 func Handler(msg *openwechat.Message) {
@@ -24,13 +24,16 @@ func Handler(msg *openwechat.Message) {
 		group := &openwechat.Group{
 			User: user,
 		}
-		switch group.ID() {
+		fmt.Println("[MN小房间]", group.ID(), group.Uin, msg.Content)
+		switch group.NickName {
 		case MNLittleRoom:
 			if msg.IsAt() {
 				fmt.Println("[收到@消息]:", msg.Content)
 			}
 			if strings.Contains(msg.Content, "#testlove") {
 				job.SendLoveWordMorning(group)
+				job.TakeMedicine(group)
+				job.DrinkWater(group)
 			}
 		default:
 
