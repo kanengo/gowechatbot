@@ -38,5 +38,6 @@ func (m *MpHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request)
 		writer.WriteHeader(http.StatusForbidden)
 	}
 	log.Println("[接收成功]")
+
 	writer.WriteHeader(http.StatusOK)
 }
